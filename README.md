@@ -1,11 +1,32 @@
-# KynWallet · Inicio de sesión (demo)
+# KynWallet · Acceso y registro (demo)
 
-Demostración funcional, solo del lado del cliente, de la pantalla de inicio de sesión de la
-billetera virtual KynWallet. Reproduce el diseño de Figma
+Demostración funcional, solo del lado del cliente, de las pantallas de acceso y registro de la
+billetera virtual KynWallet. El inicio de sesión reproduce el diseño de Figma
 ([01 · Login](https://www.figma.com/design/f7uDsv8sh6ZOtK2OitTqtg/Billetera-Virtual---Prototipos?node-id=2-2)),
-valida los campos y simula la autenticación contra cuentas ficticias, sin backend ni base de datos.
+y el registro el frame
+([04 · Registro](https://www.figma.com/design/64wSz2kYuIR1KrXD9NMRts/Billetera-Virtual---Prototipos--Copy-?node-id=31-2)).
+Ambos validan sus campos y usan cuentas ficticias, sin backend ni base de datos.
 
-Especificación, plan y tareas: [`specs/001-login-billetera/`](specs/001-login-billetera/).
+Especificaciones, plan y tareas: [`specs/`](specs/).
+
+## Registro de demostración
+
+- Desde Login, selecciona **Regístrate** para abrir el formulario; **Inicia sesión** vuelve al
+  formulario de acceso sin recargar la aplicación.
+- Completa el nombre, el correo, la contraseña y su confirmación, y acepta los términos. La
+  contraseña requiere entre 8 y 128 caracteres, una mayúscula, un número y un carácter especial.
+- Al crear la cuenta, se añade a la misma colección en memoria que consulta Login. El mensaje de
+  confirmación aparece en Login y puedes autenticarte con el correo (sin distinguir mayúsculas ni
+  espacios periféricos) y la contraseña exacta.
+- Las nuevas cuentas existen solo durante la vida de la aplicación en esa pestaña. Se pierden al
+  recargar o cerrar la aplicación y no se escriben en `localStorage`, `sessionStorage` ni cookies.
+- Las cuentas iniciales de demostración siguen configurándose mediante `VITE_DEMO_USERS`, tal
+  como se describe en Configuración; el registro no las modifica.
+- Google y Apple, así como el enlace de términos, son marcadores visuales y muestran avisos. No
+  hay autenticación social real ni destino legal.
+- Esta aplicación es exclusivamente una demostración de frontend. No introduzcas datos
+  personales ni contraseñas reales; la colección en memoria no es un sistema de cuentas seguro
+  ni una alternativa a un backend de autenticación.
 
 ## Requisitos
 
@@ -57,7 +78,8 @@ src/
 │   ├── styles/      # Tokens de Figma (`tokens.css`) y estilos globales
 │   ├── components/  # Button, TextField, PasswordField, Checkbox, SocialButton, Divider, Alert
 │   ├── layout/      # BrandPanel
-│   └── features/login/  # LoginScreen, LoginForm, WelcomeView, reducer y hook
+│   ├── features/login/  # LoginScreen, LoginForm, WelcomeView, reducer y hook
+│   └── features/register/ # RegistrationScreen, RegistrationForm, reducer y hook
 ├── App.tsx
 └── main.tsx         # Raíz de composición (inyección de dependencias)
 ```
@@ -73,5 +95,5 @@ requisito que verifica (por ejemplo, `US2-1`, `FR-012`) para mantener la trazabi
   en `src/ui/styles/tokens.css`). Detalle en `specs/001-login-billetera/research.md` (R3).
 - Los iconos de Google, Apple y del control de visibilidad son los marcadores de posición del
   diseño de Figma.
-- Fuera de alcance: recuperar contraseña, registro, acceso con Google/Apple, persistencia de
-  "Recordarme" y bloqueo por intentos fallidos. Al activarlos se muestra un aviso.
+- Fuera de alcance: recuperar contraseña, acceso con Google/Apple, persistencia de "Recordarme"
+  y bloqueo por intentos fallidos. Al activarlos se muestra un aviso.
