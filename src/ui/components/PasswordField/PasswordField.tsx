@@ -3,10 +3,12 @@ import eyeIcon from '@/ui/assets/eye.svg';
 import { TextField, type TextFieldProps } from '../TextField/TextField';
 import styles from './PasswordField.module.css';
 
-export type PasswordFieldProps = Omit<TextFieldProps, 'type' | 'endAdornment'>;
+export type PasswordFieldProps = Omit<TextFieldProps, 'type' | 'endAdornment'> & {
+  visibilityIcon?: string;
+};
 
 /** Campo de contraseña con control accesible de visibilidad (FR-013). */
-export function PasswordField(props: PasswordFieldProps) {
+export function PasswordField({ visibilityIcon = eyeIcon, ...props }: PasswordFieldProps) {
   const [visible, setVisible] = useState(false);
   return (
     <TextField
@@ -20,7 +22,7 @@ export function PasswordField(props: PasswordFieldProps) {
           aria-label={visible ? 'Ocultar contraseña' : 'Mostrar contraseña'}
           onClick={() => setVisible((current) => !current)}
         >
-          <img src={eyeIcon} alt="" width={20} height={12} />
+          <img src={visibilityIcon} alt="" width={20} height={12} />
         </button>
       }
     />

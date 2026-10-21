@@ -10,6 +10,12 @@ describe('loadDemoAccounts', () => {
     ]);
   });
 
+  it('FR-006: las cuentas iniciales mantienen las reglas de login, sin complejidad de registro', () => {
+    expect(loadDemoAccounts(raw([{ ...valid, password: 'secreto-123' }]))).toEqual([
+      { email: 'ana@example.test', password: 'secreto-123', displayName: 'Ana' },
+    ]);
+  });
+
   it.each([
     ['indefinido', undefined],
     ['vacío', ''],

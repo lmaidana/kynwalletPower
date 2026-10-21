@@ -1,5 +1,6 @@
 import { TEST_ACCOUNT } from '@/test/fixtures';
 import { InMemoryAuthGateway } from './InMemoryAuthGateway';
+import type { DemoAccount } from '@/domain/auth';
 
 const gateway = (accounts = [TEST_ACCOUNT]) => new InMemoryAuthGateway(accounts, { delayMs: 0 });
 
@@ -78,5 +79,137 @@ describe('InMemoryAuthGateway (contracts/auth-gateway.md)', () => {
     expect(onResolve).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(1);
     expect(onResolve).toHaveBeenCalledOnce();
+  });
+
+  it('AC-010, AC-012: registra una cuenta y permite autenticarla en la misma instancia', async () => {
+    const authGateway = gateway();
+    const account: DemoAccount = {
+      email: 'ana@example.test',
+      password: 'Abcdef1!',
+      displayName: 'Ana López',
+    };
+
+    await expect(authGateway.register(account)).resolves.toEqual({ kind: 'success' });
+    await expect(
+      authGateway.authenticate({ email: 'ana@example.test', password: 'Abcdef1!' }),
+    ).resolves.toEqual({ kind: 'success', displayName: 'Ana López' });
+  });
+
+  it('AC-010: guarda una copia normalizada y no muta la lista inicial recibida', async () => {
+    const initialAccounts = [TEST_ACCOUNT];
+    const authGateway = gateway(initialAccounts);
+    const account: DemoAccount = {
+      email: ' Ana@Example.test ',
+      password: 'Abcdef1!',
+      displayName: ' Ana López ',
+    };
+
+    await authGateway.register(account);
+
+    expect(initialAccounts).toHaveLength(1);
+    expect(account).toEqual({
+      email: ' Ana@Example.test ',
+      password: 'Abcdef1!',
+      displayName: ' Ana López ',
+    });
+    await expect(
+      authGateway.authenticate({ email: 'ANA@example.test', password: 'Abcdef1!' }),
+    ).resolves.toEqual({ kind: 'success', displayName: ' Ana López ' });
+  });
+
+  it('AC-004: rechaza correos duplicados normalizados en las cuentas iniciales', async () => {
+    const authGateway = gateway();
+
+    await expect(
+      authGateway.register({
+        email: `  ${TEST_ACCOUNT.email.toUpperCase()} `,
+        password: 'Abcdef1!',
+        displayName: 'Otra persona',
+      }),
+    ).resolves.toEqual({ kind: 'email-already-registered' });
+  });
+
+  it('AC-004, AC-011: rechaza un correo ya registrado aunque cambien mayúsculas y espacios', async () => {
+    const authGateway = gateway();
+    const account: DemoAccount = {
+      email: 'ana@example.test',
+      password: 'Abcdef1!',
+      displayName: 'Ana López',
+    };
+    await authGateway.register(account);
+
+    await expect(
+      authGateway.register({
+        ...account,
+        email: '  ANA@EXAMPLE.TEST ',
+        displayName: 'Ana duplicada',
+      }),
+    ).resolves.toEqual({ kind: 'email-already-registered' });
+    await expect(
+      authGateway.authenticate({ email: account.email, password: account.password }),
+    ).resolves.toEqual({ kind: 'success', displayName: 'Ana López' });
+  });
+
+  it('AC-004: una cuenta registrada con email normalizado solo se añade una vez', async () => {
+    const authGateway = gateway();
+    const account: DemoAccount = {
+      email: 'ana@example.test',
+      password: 'Abcdef1!',
+      displayName: 'Ana López',
+    };
+
+    await expect(authGateway.register(account)).resolves.toEqual({ kind: 'success' });
+    await expect(authGateway.register(account)).resolves.toEqual({
+      kind: 'email-already-registered',
+    });
+  });
+
+  it('AC-020: una instancia nueva no conserva usuarios registrados en una instancia anterior', async () => {
+    const firstSession = gateway();
+    await firstSession.register({
+      email: 'ana@example.test',
+      password: 'Abcdef1!',
+      displayName: 'Ana López',
+    });
+
+    const nextSession = gateway();
+
+    await expect(
+      nextSession.authenticate({ email: 'ana@example.test', password: 'Abcdef1!' }),
+    ).resolves.toEqual({ kind: 'invalid-credentials' });
+  });
+
+  it('FR-010: el registro no está disponible si la configuración inicial es null', async () => {
+    const authGateway = new InMemoryAuthGateway(null, { delayMs: 0 });
+
+    await expect(
+      authGateway.register({
+        email: 'ana@example.test',
+        password: 'Abcdef1!',
+        displayName: 'Ana López',
+      }),
+    ).resolves.toEqual({ kind: 'unavailable' });
+  });
+
+  it('AC-012: email se normaliza y password se compara exactamente en las cuentas registradas', async () => {
+    const authGateway = gateway();
+    await authGateway.register({
+      email: 'ana@example.test',
+      password: 'Abcdef1! ',
+      displayName: 'Ana López',
+    });
+
+    await expect(
+      authGateway.authenticate({
+        email: ' ANA@example.test ',
+        password: 'Abcdef1! ',
+      }),
+    ).resolves.toEqual({ kind: 'success', displayName: 'Ana López' });
+    await expect(
+      authGateway.authenticate({
+        email: 'ana@example.test',
+        password: 'Abcdef1!',
+      }),
+    ).resolves.toEqual({ kind: 'invalid-credentials' });
   });
 });

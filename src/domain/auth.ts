@@ -13,3 +13,16 @@ export type DemoAccount = {
   password: string;
   displayName: string;
 };
+
+export type RegistrationInput = {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  termsAccepted: boolean;
+};
+
+export type RegistrationErrors = Partial<Record<keyof RegistrationInput, string>>;
+
+export type RegistrationResult =
+  { kind: 'success' } | { kind: 'email-already-registered' } | { kind: 'unavailable' };

@@ -1,0 +1,53 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: var(--neutral-600);
+}
+
+.termsLink {
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.divider {
+  margin-top: 5px;
+}
+
+.social {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: -2px;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 0;
+  margin-top: 3px;
+  font-size: 14px;
+  color: var(--neutral-600);
+}

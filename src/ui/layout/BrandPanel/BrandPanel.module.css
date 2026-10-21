@@ -13,6 +13,34 @@
   gap: 12px;
 }
 
+.registrationLogo {
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.registrationLogoMark {
+  position: relative;
+  display: block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 28px;
+}
+
+.registrationLogoMark img {
+  position: absolute;
+  display: block;
+}
+
+.registrationLogoMark img:first-child {
+  top: 0;
+  left: 0;
+}
+
+.registrationLogoMark img:last-child {
+  top: 12px;
+  left: 4px;
+}
+
 .logo img {
   display: block;
   flex-shrink: 0;
@@ -36,6 +64,16 @@
     min-height: 100dvh;
     padding: 64px 56px;
     overflow: hidden;
+  }
+
+  .registrationPanel {
+    justify-content: flex-start;
+  }
+
+  .registrationPanel .headline {
+    margin-top: auto;
+    margin-bottom: 189px;
+    gap: 15px;
   }
 
   .headline {

@@ -14,18 +14,25 @@ import styles from './LoginForm.module.css';
 
 type LoginFormProps = {
   authenticate: Authenticate;
+  onRegister?: () => void;
+  registrationSuccess?: string | null;
 };
 
-export function LoginForm({ authenticate }: LoginFormProps) {
+export function LoginForm({ authenticate, onRegister, registrationSuccess }: LoginFormProps) {
   const { state, change, blur, submit, logout, toggleRemember, showNotice } =
     useLoginForm(authenticate);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const registrationSuccessRef = useRef<HTMLDivElement>(null);
 
   // US2-4: tras credenciales incorrectas, el foco vuelve a la contraseña.
   useEffect(() => {
     if (state.authError === 'invalid-credentials') passwordRef.current?.focus();
   }, [state.authError]);
+
+  useEffect(() => {
+    if (registrationSuccess) registrationSuccessRef.current?.focus();
+  }, [registrationSuccess]);
 
   if (state.status === 'welcome' && state.welcomeName) {
     return <WelcomeView name={state.welcomeName} onLogout={logout} />;
@@ -48,6 +55,12 @@ export function LoginForm({ authenticate }: LoginFormProps) {
         <h1 className={styles.title}>Bienvenido de nuevo</h1>
         <p className={styles.subtitle}>Ingresa a tu cuenta para continuar</p>
       </div>
+
+      {registrationSuccess && (
+        <Alert ref={registrationSuccessRef} tabIndex={-1} tone="info">
+          {registrationSuccess}
+        </Alert>
+      )}
 
       <TextField
         label="Correo electrónico"
@@ -108,7 +121,7 @@ export function LoginForm({ authenticate }: LoginFormProps) {
 
       <p className={styles.footer}>
         ¿No tienes cuenta?
-        <Button variant="link" onClick={notAvailable}>
+        <Button variant="link" onClick={onRegister ?? notAvailable}>
           Regístrate
         </Button>
       </p>

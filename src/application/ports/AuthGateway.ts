@@ -1,6 +1,7 @@
-import type { AuthResult, LoginCredentials } from '@/domain/auth';
+import type { AuthResult, DemoAccount, LoginCredentials, RegistrationResult } from '@/domain/auth';
 
-/** Puerto de autenticación (contracts/auth-gateway.md). */
+/** Puerto compartido por los casos de uso de autenticación y registro. */
 export interface AuthGateway {
   authenticate(credentials: LoginCredentials): Promise<AuthResult>;
+  register(account: DemoAccount): Promise<RegistrationResult>;
 }

@@ -38,3 +38,9 @@
     grid-template-columns: 620px 1fr;
   }
 }
+
+@media (min-width: 1280px) and (min-height: 900px) {
+  .registrationContent {
+    transform: translate(-10px, -33px);
+  }
+}
