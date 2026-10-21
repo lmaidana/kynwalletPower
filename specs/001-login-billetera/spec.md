@@ -30,6 +30,13 @@ y Apple, y enlace "Regístrate").
   formulario se reemplaza por una vista de bienvenida con un botón "Cerrar sesión" que vuelve al
   login vacío.
 
+### Session 2026-10-20
+
+- Q: ¿Debe "Regístrate" conservar el comportamiento de placeholder definido originalmente para
+  Login cuando se integre la funcionalidad de Registro? → A: No. Por autorización del usuario al
+  solicitar la Phase 1 de Registro, el enlace debe navegar a la vista de Registro dentro de la
+  SPA. "¿Olvidaste tu contraseña?", Google y Apple permanecen como placeholders.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Iniciar sesión con credenciales válidas (Priority: P1)
@@ -144,8 +151,9 @@ verifica que el texto se muestra; se vuelve a activar y se oculta.
 ### User Story 5 - Elementos del diseño fuera del alcance de la demostración (Priority: P3)
 
 Como usuario de la demostración, quiero que los elementos visibles del diseño que no forman
-parte del alcance ("¿Olvidaste tu contraseña?", Google, Apple, "Regístrate") me informen que no
-están disponibles, para no quedar con la impresión de un error.
+parte del alcance ("¿Olvidaste tu contraseña?", Google y Apple) me informen que no están
+disponibles, y que "Regístrate" me lleve al flujo de registro cuando esté integrado, para no
+quedar con la impresión de un error.
 
 **Why this priority**: garantiza fidelidad al diseño de referencia sin ampliar el alcance
 funcional (YAGNI).
@@ -155,9 +163,13 @@ funcional (YAGNI).
 **Acceptance Scenarios**:
 
 1. **Given** la pantalla de inicio de sesión, **When** el usuario activa "¿Olvidaste tu
-   contraseña?", "Google", "Apple" o "Regístrate", **Then** se muestra el aviso "Función no
-   disponible en esta demostración" y la pantalla conserva los datos ingresados.
-2. **Given** la casilla "Recordarme", **When** el usuario la marca o desmarca, **Then** la
+   contraseña?", "Google" o "Apple", **Then** se muestra el aviso "Función no disponible en
+   esta demostración" y la pantalla conserva los datos ingresados.
+2. **Given** la pantalla de inicio de sesión y la pantalla de Registro integrada en la
+   aplicación, **When** el usuario activa "Regístrate", **Then** se muestra la pantalla de
+   Registro dentro de la SPA, sin recargar el documento ni mostrar el aviso de función no
+   disponible.
+3. **Given** la casilla "Recordarme", **When** el usuario la marca o desmarca, **Then** la
    casilla cambia de estado visualmente sin almacenar ningún dato.
 
 ---
@@ -215,8 +227,10 @@ funcional (YAGNI).
   errores anunciados por tecnologías de asistencia, mensajes de resultado anunciados de forma
   automática y contraste suficiente.
 - **FR-016**: Los elementos "¿Olvidaste tu contraseña?", "Google", "Apple" y "Regístrate" DEBEN
-  mostrarse según el diseño y, al activarse, informar "Función no disponible en esta
-  demostración".
+  mostrarse según el diseño. Al activar "¿Olvidaste tu contraseña?", "Google" o "Apple", el
+  sistema DEBE informar "Función no disponible en esta demostración". Al activar "Regístrate",
+  el sistema DEBE abrir la pantalla de Registro integrada dentro de la SPA, sin recargar el
+  documento.
 - **FR-017**: La casilla "Recordarme" DEBE mostrarse y cambiar de estado, sin persistir datos.
 - **FR-018**: La pantalla DEBE adaptarse a anchos desde 320 px hasta escritorio sin
   desplazamiento horizontal; en anchos reducidos el panel de marca puede simplificarse u
@@ -259,9 +273,10 @@ funcional (YAGNI).
   "Steven Luna"), definida en configuración externa al código.
 - La política de contraseña (8 a 128 caracteres) aplica solo a la validación de formato; la
   demo no implementa reglas de complejidad adicionales.
-- El bloqueo por intentos fallidos, la recuperación de contraseña, el registro, el acceso con
-  Google/Apple y la persistencia de "Recordarme" quedan fuera del alcance; sus elementos se
-  muestran solo por fidelidad al diseño.
+- El bloqueo por intentos fallidos, la recuperación de contraseña, el acceso con Google/Apple y
+  la persistencia de "Recordarme" quedan fuera del alcance; sus elementos se muestran solo por
+  fidelidad al diseño. El registro es una funcionalidad separada; cuando esté integrada, el
+  enlace "Regístrate" navega a esa pantalla.
 - El idioma de la interfaz es español.
 - No existen BRD ni ARD para esta funcionalidad; si se incorporan, esta especificación DEBE
   alinearse con ellos (Constitución, Principio VI).

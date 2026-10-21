@@ -16,7 +16,7 @@ Textos exactos en español, tal como figuran en el diseño de Figma (nodo `2:2`)
 | Enviar | `button` "Iniciar sesión" | En carga: `aria-busy=true`, deshabilitado, texto "Iniciando sesión…" |
 | Separador | texto "o continúa con" | Decorativo |
 | Google / Apple | `button` "Google", `button` "Apple" | Muestran el aviso |
-| Registro | `button` "Regístrate" precedido por "¿No tienes cuenta?" | Muestra el aviso |
+| Registro | `button` "Regístrate" precedido por "¿No tienes cuenta?" | Navega a la pantalla de Registro integrada dentro de la SPA; no muestra el aviso de función no disponible |
 
 **Errores por campo**: texto bajo el campo, vinculado con `aria-describedby`; el campo lleva
 `aria-invalid=true`.
@@ -28,6 +28,9 @@ Textos exactos en español, tal como figuran en el diseño de Figma (nodo `2:2`)
 | Credenciales incorrectas | `alert` | "Correo o contraseña incorrectos" |
 | No disponible | `alert` | "Servicio de acceso no disponible. Intenta más tarde." |
 | Función fuera de alcance | `status` | "Función no disponible en esta demostración" |
+
+El aviso de función fuera de alcance aplica a "¿Olvidaste tu contraseña?", Google y Apple. No
+aplica al botón "Regístrate" una vez integrada la pantalla de Registro.
 
 ## Vista de bienvenida
 
